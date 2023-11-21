@@ -115,21 +115,25 @@ class HBNBCommand(cmd.Cmd):
 
     def process_parameter(self, param):
         """Processes a parameter for do_create"""
-        if len(param) == 0:
-            return None
+        param = eval(param)
+        if type(param) is str:
+            param = param.replace("_", " ").replace('"', '\\"')
+        return param
+        # if len(param) == 0:
+        #     return None
 
-        if param[0] == '"' and param[-1] == '"':
-            param = param.strip('"').replace('_', ' ').replace('"', '\\"')
+        # if param[0] == '"' and param[-1] == '"':
+        #     param = param.strip('"').replace('_', ' ').replace('"', '\\"')
 
-            return param
-        else:
-            point = param.count('.')
-            if point == 0 and param.isdigit():
-                return int(param)
-            elif point == 1 and param.replace('.', '', 1).isdigit():
-                return float(param)
-            else:
-                return None
+        #     return param
+        # else:
+        #     point = param.count('.')
+        #     if point == 0 and param.isdigit():
+        #         return int(param)
+        #     elif point == 1 and param.replace('.', '', 1).isdigit():
+        #         return float(param)
+        #     else:
+        #         return None
 
     def do_create(self, args):
         """ Create an object of any class"""
@@ -137,23 +141,18 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        params = args.split()
+        params = args.split(' ')
+        kwargs = {}
         if params[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[params[0]]()
-
         for i in range(1, len(params)):
             keyVal = params[i].split('=')
-            if len(keyVal) != 2 or keyVal[0] in ignored_attrs:
-                continue
-            val = self.process_parameter(keyVal[1])
+            kwargs[keyVal[0]] = self.process_parameter(keyVal[1])
 
-            if val is not None:
-                new_instance.__dict__[keyVal[0]] = val
-        storage.save()
+        new_instance = HBNBCommand.classes[params[0]](**kwargs)
+        new_instance.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
