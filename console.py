@@ -113,24 +113,6 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def process_parameter(self, param):
-        """Processes a parameter for do_create"""
-        if len(param) == 0:
-            return None
-
-        if param[0] == '"' and param[-1] == '"':
-            param = param.strip('"').replace('_', ' ').replace('"', '\\"')
-
-            return param
-        else:
-            point = param.count('.')
-            if point == 0 and param.isdigit():
-                return int(param)
-            elif point == 1 and param.replace('.', '', 1).isdigit():
-                return float(param)
-            else:
-                return None
-
     def do_create(self, args):
         """ Create an object of any class"""
         ignored_attrs = ('id', 'created_at', 'updated_at', '__class__')
@@ -154,18 +136,14 @@ class HBNBCommand(cmd.Cmd):
                 except (SyntaxError, NameError):
                     continue
             kwargs[keyVal[0]] = keyVal[1]
-            # val = self.process_parameter(keyVal[1])
 
-            # if val is not None:
-            #     new_instance.__dict__[keyVal[0]] = val
         if kwargs == {}:
             new_instance = HBNBCommand.classes[params[0]]()
         else:
             new_instance = HBNBCommand.classes[params[0]](**kwargs)
-            # storage.new(new_instance)
-        # storage.save()
+
         print(new_instance.id)
-        storage.save()
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
