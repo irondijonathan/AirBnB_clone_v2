@@ -12,3 +12,4 @@ class City(BaseModel, Base):
                       ) if getenv('HBNB_TYPE_STORAGE') == 'db' else ''
     name = Column(String(128), nullable=False
                   ) if getenv('HBNB_TYPE_STORAGE') == 'db' else ''
+
