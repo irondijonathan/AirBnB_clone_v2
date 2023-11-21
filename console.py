@@ -119,12 +119,9 @@ class HBNBCommand(cmd.Cmd):
             return None
 
         if param[0] == '"' and param[-1] == '"':
-            param = param.strip('"').replace('_', ' ')
+            param = param.strip('"').replace('_', ' ').replace('"', '\\"')
 
-            if param.count('"') != param.count('\\"'):
-                return None
-            else:
-                return param
+            return param
         else:
             point = param.count('.')
             if point == 0 and param.isdigit():
