@@ -136,6 +136,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+        ignored_attrs = ('id', 'created_at', 'updated_at', '__class__')
         if not args:
             print("** class name missing **")
             return
@@ -147,7 +148,7 @@ class HBNBCommand(cmd.Cmd):
 
         for i in range(1, len(params)):
             keyVal = params[i].split('=')
-            if len(keyVal) != 2:
+            if len(keyVal) != 2 or keyVal[0] in ignored_attrs:
                 continue
             val = self.process_parameter(keyVal[1])
 
