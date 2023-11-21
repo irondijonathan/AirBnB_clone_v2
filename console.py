@@ -141,17 +141,29 @@ class HBNBCommand(cmd.Cmd):
         if params[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[params[0]]()
-
+        kwargs = {}
         for i in range(1, len(params)):
             keyVal = params[i].split('=')
             if len(keyVal) != 2 or keyVal[0] in ignored_attrs:
                 continue
-            val = self.process_parameter(keyVal[1])
+            if keyVal[1][0] == '"':
+                    value = value.strip('"').replace("_", " ")
+            else:
+                    try:
+                        value = eval(value)
+                    except (SyntaxError, NameError):
+                        continue
+            kwargs[keyVal[0]] = value
+            # val = self.process_parameter(keyVal[1])
 
-            if val is not None:
-                new_instance.__dict__[keyVal[0]] = val
-        storage.save()
+            # if val is not None:
+            #     new_instance.__dict__[keyVal[0]] = val
+        if kwargs == {}:
+            new_instance = HBNBCommand.classes[params[0]]()
+        else:
+            new_instance = HBNBCommand.classes[params[0]](**kwargs)
+            storage.new(new_instance)
+        # storage.save()
         print(new_instance.id)
         storage.save()
 
