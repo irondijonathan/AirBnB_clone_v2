@@ -147,13 +147,13 @@ class HBNBCommand(cmd.Cmd):
             if len(keyVal) != 2 or keyVal[0] in ignored_attrs:
                 continue
             if keyVal[1][0] == '"':
-                    value = value.strip('"').replace("_", " ")
+                keyVal[1] = keyVal[1].strip('"').replace("_", " ")
             else:
-                    try:
-                        value = eval(value)
-                    except (SyntaxError, NameError):
-                        continue
-            kwargs[keyVal[0]] = value
+                try:
+                    keyVal[1] = eval(keyVal[1])
+                except (SyntaxError, NameError):
+                    continue
+            kwargs[keyVal[0]] = keyVal[1]
             # val = self.process_parameter(keyVal[1])
 
             # if val is not None:
@@ -162,7 +162,7 @@ class HBNBCommand(cmd.Cmd):
             new_instance = HBNBCommand.classes[params[0]]()
         else:
             new_instance = HBNBCommand.classes[params[0]](**kwargs)
-            storage.new(new_instance)
+            # storage.new(new_instance)
         # storage.save()
         print(new_instance.id)
         storage.save()
