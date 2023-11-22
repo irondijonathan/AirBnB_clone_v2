@@ -1,9 +1,18 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
-from sqlalchemy import Integer, Float, String, Column, ForeignKey
+from sqlalchemy import Integer, Float, String, Column, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from os import getenv
+
+place_amenity = Table('place_amenity',
+                      Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             nullable=False, primary_key=True),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             nullable=False, primary_key=True))
 
 
 class Place(BaseModel, Base):
@@ -12,7 +21,7 @@ class Place(BaseModel, Base):
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False
                      ) if getenv('HBNB_TYPE_STORAGE') == 'db' else ''
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False
-                     )if getenv('HBNB_TYPE_STORAGE') == 'db' else ''
+                     ) if getenv('HBNB_TYPE_STORAGE') == 'db' else ''
     name = Column(String(128), nullable=False
                   )if getenv('HBNB_TYPE_STORAGE') == 'db' else ''
     description = Column(String(1024)
@@ -44,3 +53,27 @@ class Place(BaseModel, Base):
                     res.append(review)
             return res
     amenity_ids = []
+
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        amenities = relationship('Amenity',
+                                 secondary=place_amenity,
+                                 backref='place_amenities', viewonly=False)
+    else:
+        @property
+        def amenities(self):
+            """Gets all the amenities for a place"""
+            from models.amenity import Amenity
+            from models import storage
+
+            res = []
+            for val in storage.all(Amenity).values():
+                if val.id in self.amenity_ids:
+                    res.append(val)
+            return res
+
+        @amenities.setter
+        def amenities(self, value):
+            """Adds an amenity to this Place"""
+            from models.amenity import Amenity
+            if type(value) is Amenity and value.id not in self.amenity_ids:
+                self.amenity_ids.append(value.id)
