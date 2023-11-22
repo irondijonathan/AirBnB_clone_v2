@@ -5,7 +5,6 @@ from models.engine.file_storage import FileStorage
 from models.state import State
 
 fs = FileStorage()
-
 # All States
 all_states = fs.all(State)
 print("All States: {}".format(len(all_states.keys())))

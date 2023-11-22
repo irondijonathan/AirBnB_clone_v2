@@ -18,6 +18,8 @@ class User(BaseModel, Base):
     last_name = Column(String(128)
                        ) if getenv('HBNB_TYPE_STORAGE') == 'db' else ''
     places = relationship('Place', backref='user',
-                          cascade='all, delete, delete-orphan')
+                          cascade='all, delete, delete-orphan'
+                          ) if getenv('HBNB_TYPE_STORAGE') == 'db' else None
     reviews = relationship('Review', backref='user',
-                           cascade='all, delete, delete-orphan')
+                           cascade='all, delete, delete-orphan'
+                           ) if getenv('HBNB_TYPE_STORAGE') == 'db' else None

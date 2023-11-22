@@ -14,4 +14,5 @@ class City(BaseModel, Base):
     name = Column(String(128), nullable=False
                   ) if getenv('HBNB_TYPE_STORAGE') == 'db' else ''
     places = relationship('Place', backref='cities',
-                          cascade='all, delete, delete-orphan')
+                          cascade='all, delete, delete-orphan'
+                          ) if getenv('HBNB_TYPE_STORAGE') == 'db' else None
