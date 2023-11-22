@@ -4,6 +4,9 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Integer, Float, String, Column, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from os import getenv
+from models.amenity import Amenity
+from models.review import Review
+
 
 place_amenity = Table('place_amenity',
                       Base.metadata,
@@ -13,6 +16,9 @@ place_amenity = Table('place_amenity',
                       Column('amenity_id', String(60),
                              ForeignKey('amenities.id'),
                              nullable=False, primary_key=True))
+"""The many to many relationship table
+between Place and Amenity records.
+"""
 
 
 class Place(BaseModel, Base):
@@ -45,7 +51,6 @@ class Place(BaseModel, Base):
         def reviews(self):
             """Gets list of reviews"""
             from models import storage
-            from models.review import Review
 
             res = []
             for _, review in storage.all(Review).items:
@@ -62,18 +67,16 @@ class Place(BaseModel, Base):
         @property
         def amenities(self):
             """Gets all the amenities for a place"""
-            from models.amenity import Amenity
             from models import storage
 
             res = []
             for val in storage.all(Amenity).values():
-                if val.id in self.amenity_ids:
+                if val.id not in self.amenity_ids:
                     res.append(val)
             return res
 
         @amenities.setter
         def amenities(self, value):
             """Adds an amenity to this Place"""
-            from models.amenity import Amenity
             if type(value) is Amenity and value.id not in self.amenity_ids:
                 self.amenity_ids.append(value.id)
