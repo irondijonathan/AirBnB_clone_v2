@@ -34,7 +34,7 @@ class DBStorage:
     def all(self, cls=None):
         """Returns a dictionary of the objects in the database"""
         dictionary = {}
-        classes = (State, City, User)
+        classes = (State, City, User, Place)
         if cls is not None:
             classes = (cls)
         for cls_type in classes:
