@@ -71,7 +71,7 @@ class Place(BaseModel, Base):
 
             res = []
             for val in storage.all(Amenity).values():
-                if val.id not in self.amenity_ids:
+                if val.id in self.amenity_ids:
                     res.append(val)
             return res
 
