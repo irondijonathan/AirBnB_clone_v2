@@ -37,27 +37,27 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-    """Uploads and unpacks an archive on the server"""
-
+    """Uploads and unpacks an archive on the server
+    Args:
+        archive_path (str): The path to the archived static files.
+    """
     if not os.path.exists(archive_path):
         return False
-
     archive_name = os.path.basename(archive_path)
-    output_dir = archive_name.split('.')[0]
-    r_dir = "/data/web_static/releases/"
-    res = False
+    folder_name = archive_name.replace(".tgz", "")
+    folder_path = "/data/web_static/releases/{}/".format(folder_name)
+    success = False
     try:
-        put(archive_path, "/tmp")
-        run(f"mkdir -p {r_dir}{output_dir}")
-        run(f"tar -xzf /tmp/{archive_name} -C {r_dir}{output_dir}/")
-        run(f"rm /tmp/{archive_name}")
-        run(f" mv {r_dir}{output_dir}/web_static/* {r_dir}{output_dir}/")
-        run(f"rm -rf {r_dir}{output_dir}/web_static")
-        run(f"rm -rf /data/web_static/current")
-        run(f"ln -s {r_dir}{output_dir}/ /data/web_static/current")
+        put(archive_path, "/tmp/{}".format(archive_name))
+        run("mkdir -p {}".format(folder_path))
+        run("tar -xzf /tmp/{} -C {}".format(archive_name, folder_path))
+        run("rm -rf /tmp/{}".format(archive_name))
+        run("mv {}web_static/* {}".format(folder_path, folder_path))
+        run("rm -rf {}web_static".format(folder_path))
+        run("rm -rf /data/web_static/current")
+        run("ln -s {} /data/web_static/current".format(folder_path))
         print('New version deployed!')
-        res = True
+        success = True
     except Exception:
-        res = False
-
-    return res
+        success = False
+    return success
