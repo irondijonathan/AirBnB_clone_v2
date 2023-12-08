@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#transfer files from client to server
+# This transfer files from client to server
 
 if [ "$#" -lt 4 ]
 then

@@ -1,4 +1,4 @@
--- Pepares a MySQL server for the AirBnB project
+-- This Pepares a MySQL server for the AirBnB project
 
 CREATE DATABASE IF NOT EXISTS hbnb_dev_db;
 CREATE USER IF NOT EXISTS 'hbnb_dev'@'localhost' IDENTIFIED BY 'hbnb_dev_pwd';

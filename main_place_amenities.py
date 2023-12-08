@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" Test link Many-To-Many Place <> Amenity
+""" This Test link Many-To-Many Place <> Amenity
 """
 # from models import *
 from models import storage

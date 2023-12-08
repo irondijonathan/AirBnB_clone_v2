@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
- Fabric script that distributes
+ This is a Fabric script that distributes
  an archive to your web servers, using the function do_deploy
 """
 import os
@@ -13,7 +13,7 @@ env.hosts = ['100.26.9.42', '54.237.115.35']
 
 @runs_once
 def do_pack():
-    """Archives the static files."""
+    """ This Archives the static files."""
     if not os.path.isdir("versions"):
         os.mkdir("versions")
     cur_time = datetime.now()
@@ -37,7 +37,7 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-    """Uploads and unpacks an archive on the server
+    """ This Uploads and unpacks an archive on the server
     Args:
         archive_path (str): The path to the archived static files.
     """
@@ -65,7 +65,7 @@ def do_deploy(archive_path):
 
 def deploy():
     """
-    Creates and distributes an archive to your web servers
+    This Creates and distributes an archive to your web servers
     """
     archive_path = do_pack()
     return do_deploy(archive_path) if archive_path else False
